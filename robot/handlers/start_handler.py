@@ -11,6 +11,6 @@ async def start(message: Message):
     user, is_new = await identify_user(telegram_id=message.from_user.id)
 
     if is_new:
-        await message.answer(await get_text_by_name("start_new_user", "Привет! Новый текст."))
+        await message.answer(await get_text_by_name("Начальный текст для нового пользователя", "Привет! Новый текст."))
     else:
-        await message.answer(await get_text_by_name("start_old_user", "Привет! Старый текст."))
+        await message.answer(await get_text_by_name("Начальный текст для старого пользователя", "Привет! Старый текст."))

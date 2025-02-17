@@ -6,6 +6,8 @@ from aiogram import Dispatcher, Bot
 from robot.handlers import router
 import asyncio
 import logging
+from robot.schedulers.start_scheduler import start_scheduler
+
 
 class Command(BaseCommand):
     help = 'RUN COMMAND: python manage.py runbot'
@@ -15,6 +17,20 @@ class Command(BaseCommand):
         dp = Dispatcher()
         dp.include_router(router)
 
-        logging.basicConfig(level=logging.INFO)
+        if not os.path.exists('logs'):
+            os.makedirs('logs')
 
-        asyncio.run(dp.start_polling(bot))
+        logging.basicConfig(
+            level=logging.INFO,
+            format='%(asctime)s - %(name)s - %(levelname)s - %(filename)s:%(funcName)s:%(lineno)d - %(message)s',
+            handlers=[
+                logging.FileHandler('logs/bot.log'),
+                logging.StreamHandler()
+            ]
+        )
+
+        async def main():
+            start_scheduler(bot)
+            await dp.start_polling(bot)
+
+        asyncio.run(main())
